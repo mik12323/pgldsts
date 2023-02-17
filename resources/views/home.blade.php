@@ -7,18 +7,7 @@
 
     }
 
-    .imgCard{
-        overflow: hidden;
-    }
 
-    img{
-        transition: transform 0.5s;
-    }
-
-    .imgCard:hover{
-        transform: scale(1.02);
-        /* transition: transform .5s ease; */
-    }
 </style>
 @section('content')
 {{-- Showcase --}}
@@ -35,30 +24,22 @@
     </div>
 </section>
 
-{{-- <div class="card-group m-4 p-4 text-center">
-    <div class="card m-2">
-        <img class="imgCard card-img-top" src="{{ asset('/img/SirOte.jpg') }}" alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title"><u>Provincial Engineer</u></h5>
-            <p class="card-text">Engr. Dimasira A. Macabando, Jr., Ph. D.</p>
-        </div>
-    </div>
-    <div class="card m-2">
-        <img class="imgCard card-img-top" src="{{ asset('img/gov.png') }}" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title"><u>Governor</u></h5>
-          <p class="card-text">Gov. Dr. Mamintal Alonto Adiong Jr.</p>
-        </div>
-      </div>
-    <div class="card m-2">
-      <img class="imgCard card-img-top" src="{{ asset('img/sirjopet.png') }}" alt="Card image cap">
-      <div class="card-body">
-        <h5 class="card-title"><u>Assistant Provincial Engineer</u></h5>
-        <p class="card-text">Engr. Jopet Usman</p>
-      </div>
-    </div>
+<div class="card-deck d-flex m-4 p-4">
 
-</div> --}}
+      <div class="card-body border border-dark border-4 m-5 p-5 text-center">
+        <h1 class="card-title py-3 ">{{ $projectsAvailable }}</h1>
+        <h5 class="card-text py-1"><u>Available Projects</u></h5>
+      </div>
+      <div class="card-body border border-dark border-4 m-5 p-5 text-center">
+        <h1 class="card-title py-3">{{ $projectsOngoing }}</h1>
+        <h5 class="card-text py-1"><u>Ongoing Projects</u></h5>
+      </div>
+      <div class="card-body border border-dark border-4 m-5 p-5 text-center">
+        <h1 class="card-title py-3">{{ $projectsDone }}</h1>
+        <h5 class="card-text py-1"><u>Finished Projects</u></h5>
+      </div>
+
+</div>
 
     {{-- <div class="container-fluid text-center bg-secondary p-2">
         <h5>Number of projects: {{ $projects }}</h5>

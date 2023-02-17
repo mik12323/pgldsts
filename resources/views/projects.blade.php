@@ -32,7 +32,8 @@
             {{-- @foreach ($projectsWork as $project) --}}
           <tr id="project">
             {{-- @dd($projectsWork->status) --}}
-                @if ($projectAvailable==null)
+            {{-- @dd($projectAvailable) --}}
+                @if ($projectAvailable==null || $projectForMe==null)
                 @else
                 <th scope="row">{{ $i++}}</th>
                 <td id="refNo">{{ $projectForMe->referenceNumber }}</td>
@@ -44,7 +45,7 @@
                 <form id="timeInForm" action="{{ route('addTransaction') }}" method="POST">
                     @csrf
                     <input type="hidden" name="project_id" id="project_id" value="{{ $projectForMe->id }}">
-                    <input type="hidden" name="user_id" id="user_id" value="{{ $data->office_id }}">
+                    <input type="hidden" name="user_id" id="user_id" value="{{ $data->id }}">
                     <input type="hidden" name="department_id" id="department_id" value="{{ $projectForMe->department->id }}">
                     <input type="hidden" name="office_id" id="office_id" value="{{ $projectForMe->office->id }}">
                     <input type="hidden" name="activity_id" id="activity_id" value="{{ $projectForMe->status }}">
@@ -66,7 +67,7 @@
                     @csrf
 
                     <input type="hidden" name="project_id" id="project_id" value="{{ $projectForMe->id }}">
-                    <input type="hidden" name="user_id" id="user_id" value="{{ $data->office_id }}">
+                    <input type="hidden" name="user_id" id="user_id" value="{{ $data->id }}">
                     <input type="hidden" name="department_id" id="department_id" value="{{ $projectForMe->department->id }}">
                     <input type="hidden" name="office_id" id="office_id" value="{{ $projectForMe->office->id }}">
                     <input type="hidden" name="activity_id" id="activity_id" value="{{ $projectForMe->status }}">

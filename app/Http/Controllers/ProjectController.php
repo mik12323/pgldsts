@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
-use App\Models\Department;
-use App\Models\Office;
-use App\Models\Transaction;
-use Illuminate\Http\Request;
 use Session;
 use App\Models\User;
+use App\Models\Office;
 use App\Models\Project;
+use App\Models\Activity;
+use App\Mail\emailProject;
+use App\Models\Department;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ProjectController extends Controller
 {
@@ -56,17 +58,25 @@ class ProjectController extends Controller
     }
     public function trackProjectGuest(Request $request){
         $request->validate([
-            'referenceNumber' => 'required'
+            'referenceNumber' => 'required_without:location',
+            'location' => 'required_without:referenceNumber'
         ]);
-        $projects = Project::where('referenceNumber','=',$request->referenceNumber)->first();
+        // $projects = Project::where('referenceNumber','=',$request->referenceNumber)->first();
+        if($request->referenceNumber!=null){
+            $projects = Project::where('referenceNumber','=',$request->referenceNumber)->first();
+        } else{
+            $projects = Project::where('location', '=', $request->location)->first();
+        }
 
 
-        if($projects){
+        if($projects!=null){
+            // @dd('a');
             $transactions = Transaction::where('project_id', '=', $projects->id)->orderBy('created_at', 'desc')->first();
             $offices = Office::where('id', '=', $transactions->user->office_id)->first();
             return view('trackingProjectGuest', compact('projects', 'transactions', 'offices'));
             }else{
-                return back()->with('fail', 'Reference number found!');
+                // @dd('b');
+                return back()->with('fail', 'Information entered does not match anything!');
             }
     }
 
@@ -95,11 +105,12 @@ class ProjectController extends Controller
 
         // $projectsWork = Project::where(['department_id' => $data->department_id, 'status' => $data->office_id])
         $projectAvailable = Project::whereDepartmentId($data->department_id)
-        ->where('status', '=', $data->office_id)
+        // ->where('status', '=', $data->office_id)
         ->orderBy('created_at', 'desc')
         ->first();
         // @dd($projectAvailable);
         if($projectAvailable==null){
+            // @dd('null');
             $transactions = Transaction::all();
             $projectsDone = Project::whereDepartmentId($data->department_id)
               ->where('status', '>', $data->office_id)
@@ -114,14 +125,14 @@ class ProjectController extends Controller
             return view('projects', compact('data', 'transactions', 'projectAvailable', 'projectsDone'));
         }
         else{
-            $projectsWork = Project::whereDepartmentId($data->department_id)
-            ->where('status', '=', $data->office_id)
-            ->orderBy('created_at', 'desc')
-            ->first();
+            // $projectsWork = Project::whereDepartmentId($data->department_id)
+            // ->where('status', '=', $data->office_id)
+            // ->orderBy('created_at', 'desc')
+            // ->first();
+            // @dd($projectsWork);
 
-            $statusProject = $projectsWork->status;
+            $statusProject = $projectAvailable->status;
             $projectForMe = null;
-
             if($projectAvailable != '[]' || $projectForMe != null){
                 // @dd($projectForMe = Project::where(['department_id' => $data->department_id, 'status'=>1])->first());
                 // @dd($statusProject);
@@ -139,31 +150,32 @@ class ProjectController extends Controller
                 }
                 if((in_array($statusProject,$bac)) && $data->office_id == 4){
                     // @dd('BAC');
-                    $projectForMe = Project::where(['department_id' => $data->department_id, 'status'=>$data->office_id])->first();
+                    $projectForMe = Project::where(['department_id' => $data->department_id])->first();
                 }
 
-                if((in_array($statusProject,$pgo) && $data->office_id == 5)){
+                if((in_array($statusProject,$pgo)) && $data->office_id == 5){
                     // @dd('PGO');
-                    $projectForMe = Project::where(['department_id' => $data->department_id, 'status'=>$data->office_id])->first();
+                    $projectForMe = Project::where(['department_id' => $data->department_id])->first();
                 }
 
-                if((in_array($statusProject,$accounting) && $data->office_id == 6)){
+                if((in_array($statusProject,$accounting)) && $data->office_id == 6){
                     // @dd('ACCOUNTING');
-                    $projectForMe = Project::where(['department_id' => $data->department_id, 'status'=>$data->office_id])->first();
+                    $projectForMe = Project::where(['department_id' => $data->department_id])->first();
                 }
 
-                if((in_array($statusProject,$pto) && $data->office_id == 7)){
+                if((in_array($statusProject,$pto)) && $data->office_id == 7){
                     // @dd('PTO');
-                    $projectForMe = Project::where(['department_id' => $data->department_id, 'status'=>$data->office_id])->first();
+                    $projectForMe = Project::where(['department_id' => $data->department_id])->first();
                 }
 
-                if((in_array($statusProject,$cashier) && $data->office_id == 8)){
+                if((in_array($statusProject,$cashier)) && $data->office_id == 8){
                     // @dd('Cashier\'s Office');
-                    $projectForMe = Project::where(['department_id' => $data->department_id, 'status'=>$data->office_id])->first();
+                    $projectForMe = Project::where(['department_id' => $data->department_id])->first();
                 }
 
             }
             if($projectForMe!=null){
+
                 $transactions = Transaction::where(['project_id' => $projectForMe->id, 'activity_id'=>$projectForMe->status])->orderBy('created_at', 'desc')->first();
                 // @dd($transactions);
             }else{
@@ -184,9 +196,9 @@ class ProjectController extends Controller
 
                   // }
                   if($data->office_id==1){
-                      return view('project-add', compact('data', 'projectsWork', 'projectsDone', 'projectForMe', 'transactions', 'projectAvailable'));
+                      return view('project-add', compact('data', 'projectsDone', 'projectForMe', 'transactions', 'projectAvailable'));
                     }else{
-                        return view('projects', compact('data', 'projectsWork', 'projectsDone', 'projectForMe', 'transactions', 'projectAvailable'));
+                        return view('projects', compact('data', 'projectsDone', 'projectForMe', 'transactions', 'projectAvailable'));
                     }
         }
 

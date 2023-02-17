@@ -26,11 +26,16 @@
             <p class="text-white-50 mb-5">Please enter the reference number</p>
             <form action="{{ route('track-project-guest') }}" method="POST">
             @csrf
-            <div class="form-outline form-white mb-5 pb-5">
+            <div class="form-outline form-white mb-2 pb-2">
                 <label class="form-label" for="referenceNumber">Reference No.</label>
                 <input type="number" name="referenceNumber" class="form-control form-control-lg" placeholder="Enter reference number" />
                 <span class="text-danger">@error('referenceNumber') <p>Please enter a valid reference number.</p>  @enderror</span>
-                </div>
+            </div>
+            <div class="form-outline form-white mb-2 pb-2">
+                <label class="form-label" for="location">Location</label>
+                <input type="text" name="location" class="form-control form-control-lg" placeholder="Enter the location" />
+                <span class="text-danger">@error('location') <p>Please enter a valid location.</p>  @enderror</span>
+            </div>
 
 
             <button class="btn btn-outline-light btn-lg px-5" type="submit">Submit</button>

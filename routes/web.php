@@ -1,9 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TransactionController;
+use App\Mail\Project;
 use Illuminate\Support\Facades\Route;
+use App\Mail\emailProject;
+
 use App\Http\Middleware;
 
 /*
@@ -55,6 +59,13 @@ Route::get('/', [AuthController::class, 'homeView'])->name('home');
 
 Route::post('/register-user', [AuthController::class, 'registerUser'])->name('register-user');
 Route::post('/login-user', [AuthController::class, 'loginUser'])->name('login-user');
+// Route::get('/project/email', [MailController::class, 'email'])->name('email');
+Route::get('/project/email', [MailController::class, 'email'])->name('email');
+// Route::get('/mail', [MailController::class, 'sendEmail']{
+//     Mail::to('mikoy.dimaro@gmail.com')
+//         ->send(new Project());
+// });
+
 
 
 

@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Project;
+use App\Mail\emailProject;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
 {
@@ -58,16 +61,19 @@ class TransactionController extends Controller
         // $transaction->project->status = $request->status;
 
         $project = Project::find($transaction->project_id);
-        // @dd($transaction);
+        // $data = User::find($transaction->office_id+1);
+        // $user = User::where('office_id', '=', $transaction->office_id+1)->first();
+        // @dd($data->email);
         $status = $project->status + 1 ?? 1;
         Project::updateOrCreate(
             ['id' => $transaction->project_id],
             ['timeOut' => $request->timeOut,
             'status' => $status,
-            'activity_id' => $status,
-            'office_id' => $status]
+            'activity_id' => $status]
         );
         $transaction->save();
+        // Mail::to($transaction->user->email)->send(new emailProject($data, $transaction, $project));
+
         return back();
         // Transaction::updateOrCreate(
         //     ['id' => $transaction->id],

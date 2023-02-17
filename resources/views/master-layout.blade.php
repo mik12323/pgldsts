@@ -20,7 +20,7 @@
             <img src="{{ asset('img/capitol_logo.png') }}" alt="" class="img-responsive">
         </a>
         <div class="mt-1">
-            <h6>Provincial Government of <span style="color: #ff7260;">Lanao del Sur</span> Database System</h6>
+            <h6>Provincial Government of <span style="color: #ff7260;">Lanao del Sur</span> Tracking System</h6>
         </div>
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -29,6 +29,8 @@
 
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav ms-auto">
+
+                    {{-- LOGGED IN --}}
                     @if (Session::has('loginId'))
                     <li class="nav-item h6 mb-0">
                         <a href="{{ '/' }}" class="nav-link">Home</a>
@@ -39,10 +41,18 @@
                     <li class="nav-item h6 mb-0">
                         <a href="{{ route('project-view') }}" class="nav-link">Projects</a>
                     </li>
+                    <li class="nav-item h6 mb-0 position-relative">
+
+                        <span class="position-absolute top-0 start-100 mt-1 translate-middle badge rounded-pill badge-notification bg-danger">3</span>
+                        <img src="{{ asset('img/notification.png') }}" alt="" class="nav-link px-1">
+
+                    </li>
                     <li class="nav-item h6 mb-0">
                         <a href="{{ route('profile') }}" class="nav-link">{{ $data->fname }}</a>
                     </li>
                     @else (Session::has('!loginId'))
+
+                    {{-- GUEST --}}
                     <li class="nav-item h6 mb-0">
                         <a href="{{ '/' }}" class="nav-link">Home</a>
                     </li>

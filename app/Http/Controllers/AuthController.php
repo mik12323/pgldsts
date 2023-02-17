@@ -84,11 +84,16 @@ class AuthController extends Controller
 
     public function homeView(){
         $data = array();
-        // $projects = Project::all()->count();
+        $projectsAvailable = Project::where('status', '=', '1')->count();
+        $projectsOngoing = Project::where('status', '<', '22')->count();
+        $projectsDone = Project::where('status', '>', '22')->count();
+        // @dd($projectsOngoing);
         if(Session::has('loginId')){
             $data = User::where('id', '=', Session::get('loginId'))->first();
+            $projectForMe = Project::where(['department_id' => $data->department_id, 'status'=>$data->office_id])->first();
+            return view('home', compact('data', 'projectsAvailable', 'projectsOngoing', 'projectsDone', 'projectForMe'));
         }
-        return view('home', compact('data'));
+        return view('home', compact('data', 'projectsAvailable', 'projectsOngoing', 'projectsDone'));
     }
 
     public function profileView(){
